@@ -76,35 +76,35 @@ int test_determinant(std::string filename, bool val) {
 
 int inversion_tests() {
     int failed = 0;
-    failed += non_invertible_test("data/inv_test0.txt");                  //inv_test0 is not invertible
-    failed += invertible_test("data/inv_test1.txt", "data/inverse1.txt"); //inv_test1 is invertible
-    failed += non_invertible_test("data/inv_test2.txt");                  //inv_test2 is not invertible
-    failed += non_invertible_test("data/inv_test3.txt");                  //inv_test3 is not invertible
-    failed += non_invertible_test("data/inv_test4.txt");                  //inv_test4 is not invertible
-    failed += non_invertible_test("data/inv_test5.txt");                  //inv_test5 is not invertible
-    failed += invertible_test("data/inv_test6.txt", "data/inverse6.txt"); //inv_test6 is invertible
+    failed += non_invertible_test("test_data/inv_test0.txt");                  //inv_test0 is not invertible
+    failed += invertible_test("test_data/inv_test1.txt", "test_data/inverse1.txt"); //inv_test1 is invertible
+    failed += non_invertible_test("test_data/inv_test2.txt");                  //inv_test2 is not invertible
+    failed += non_invertible_test("test_data/inv_test3.txt");                  //inv_test3 is not invertible
+    failed += non_invertible_test("test_data/inv_test4.txt");                  //inv_test4 is not invertible
+    failed += non_invertible_test("test_data/inv_test5.txt");                  //inv_test5 is not invertible
+    failed += invertible_test("test_data/inv_test6.txt", "test_data/inverse6.txt"); //inv_test6 is invertible
     return failed;
 }
 
 int rank_tests() {
     int failed = 0;
-    failed += test_rank("data/testB0.txt",4,5,3);
-    failed += test_rank("data/testB1.txt",6,10,6);
-    failed += test_rank("data/testB2.txt",70,60,60);
-    failed += test_rank("data/testB3.txt",30,20,20);
-    failed += test_rank("data/testB4.txt",131,131,129);
+    failed += test_rank("test_data/testB0.txt",4,5,3);
+    failed += test_rank("test_data/testB1.txt",6,10,6);
+    failed += test_rank("test_data/testB2.txt",70,60,60);
+    failed += test_rank("test_data/testB3.txt",30,20,20);
+    failed += test_rank("test_data/testB4.txt",131,131,129);
     return failed;
 }
 
 int determinant_tests() {
     int failed = 0;
-    failed += test_determinant("data/testC0.txt", 1);
-    failed += test_determinant("data/testC1.txt", 0);
-    failed += test_determinant("data/testC2.txt", 1);
-    failed += test_determinant("data/testC3.txt", 0);
-    failed += test_determinant("data/testC4.txt", 0);
-    failed += test_determinant("data/testC5.txt", 0);
-    failed += test_determinant("data/testC6.txt", 1);
+    failed += test_determinant("test_data/testC0.txt", 1);
+    failed += test_determinant("test_data/testC1.txt", 0);
+    failed += test_determinant("test_data/testC2.txt", 1);
+    failed += test_determinant("test_data/testC3.txt", 0);
+    failed += test_determinant("test_data/testC4.txt", 0);
+    failed += test_determinant("test_data/testC5.txt", 0);
+    failed += test_determinant("test_data/testC6.txt", 1);
     return failed;
 }
 
@@ -113,9 +113,9 @@ int multiply_tests() {
     bool loaded;
     bitmatrix A,B,C,D;
     for(int num = 0; num <= 3; num++) {
-        std::string filenameA = "data/testP" + std::to_string(num) + "A.txt";
-        std::string filenameB = "data/testP" + std::to_string(num) + "B.txt";
-        std::string filenameC = "data/testP" + std::to_string(num) + "C.txt";
+        std::string filenameA = "test_data/testP" + std::to_string(num) + "A.txt";
+        std::string filenameB = "test_data/testP" + std::to_string(num) + "B.txt";
+        std::string filenameC = "test_data/testP" + std::to_string(num) + "C.txt";
         loaded = A.load_dense(filenameA);
         if(!loaded) {
             notify("multiplyfail1");
@@ -147,16 +147,16 @@ int io_tests(std::mt19937_64 &eng) {
     for(int i = 1; i < 5; i++) {
         bitmatrix A(15*i,22*i);
         A.random(eng);
-        A.save_dense("data/densetest.txt");
-        A.save_sparse("data/sparsetest.txt");
-        loaded = B.load_sparse("data/sparsetest.txt");
+        A.save_dense("test_data/densetest.txt");
+        A.save_sparse("test_data/sparsetest.txt");
+        loaded = B.load_sparse("test_data/sparsetest.txt");
         if(!loaded) { notify("iofail1"); failed++; }
         else if(A != B) { notify("iofail2"); failed++; }
-        loaded = C.load_dense("data/densetest.txt");
+        loaded = C.load_dense("test_data/densetest.txt");
         if(!loaded) { notify("iofail3"); failed++; }
         else if(A != C) { notify("iofail4"); failed++; }
-        remove("data/densetest.txt");
-        remove("data/sparsetest.txt");
+        remove("test_data/densetest.txt");
+        remove("test_data/sparsetest.txt");
     }
     return failed;
 }
@@ -950,16 +950,16 @@ int vec_io_tests(std::mt19937_64 &eng) {
     for(int i = 1; i < 5; i++) {
         bitvector A(22*i);
         A.random(eng);
-        A.save_dense("data/vec_densetest.txt");
-        A.save_sparse("data/vec_sparsetest.txt");
-        loaded = B.load_sparse("data/vec_sparsetest.txt");
+        A.save_dense("test_data/vec_densetest.txt");
+        A.save_sparse("test_data/vec_sparsetest.txt");
+        loaded = B.load_sparse("test_data/vec_sparsetest.txt");
         if(!loaded) { notify("vec_iofail1"); failed++; }
         else if(A != B) { notify("vec_iofail2"); failed++; }
-        loaded = C.load_dense("data/vec_densetest.txt");
+        loaded = C.load_dense("test_data/vec_densetest.txt");
         if(!loaded) { notify("vec_iofail3"); failed++; }
         else if(A != C) { notify("vec_iofail4"); failed++; }
-        remove("data/vec_densetest.txt");
-        remove("data/vec_sparsetest.txt");
+        remove("test_data/vec_densetest.txt");
+        remove("test_data/vec_sparsetest.txt");
     }
     return failed;
 }
