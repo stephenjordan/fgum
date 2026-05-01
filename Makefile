@@ -1,45 +1,45 @@
 CXX ?= g++
-CXXFLAGS ?= -O2 -Wall -std=c++20 -pthread -Isrc
+CPPFLAGS ?= -Isrc
+CXXFLAGS ?= -O2 -Wall -std=c++20 -pthread
+LDFLAGS ?=
+LDLIBS ?=
 
 SRC := src
 BIN := bin
 
+PROGRAMS := \
+	$(BIN)/test_xortools \
+	$(BIN)/full_anneal \
+	$(BIN)/random_regular \
+	$(BIN)/density
+
 .PHONY: all build check clean
 
-all: $(BIN)/test_xortools $(BIN)/full_anneal $(BIN)/random_regular
+all build: $(PROGRAMS)
 
-check: $(BIN)/test_xortools
+check: $(BIN)/test_xortools $(BIN)/density
 	./$(BIN)/test_xortools
+	./$(BIN)/density --k 2 --D 3 --bins 101 --iterations 2 --precision 0.1 --max-delta 0.1 >/dev/null
 
 $(BIN):
 	mkdir -p $(BIN)
 
 $(BIN)/test_xortools: $(BIN)/test_xortools.o $(BIN)/bitmatrix.o $(BIN)/utils.o | $(BIN)
-	$(CXX) $(CXXFLAGS) $(BIN)/test_xortools.o $(BIN)/bitmatrix.o $(BIN)/utils.o -o $@
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 $(BIN)/full_anneal: $(BIN)/full_anneal.o $(BIN)/bitmatrix.o $(BIN)/utils.o $(BIN)/xoropt.o | $(BIN)
-	$(CXX) $(CXXFLAGS) $(BIN)/full_anneal.o $(BIN)/bitmatrix.o $(BIN)/utils.o $(BIN)/xoropt.o -o $@
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 $(BIN)/random_regular: $(BIN)/random_regular.o $(BIN)/bitmatrix.o $(BIN)/utils.o | $(BIN)
-	$(CXX) $(CXXFLAGS) $(BIN)/random_regular.o $(BIN)/bitmatrix.o $(BIN)/utils.o -o $@
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
-$(BIN)/test_xortools.o: $(SRC)/test_xortools.cpp $(SRC)/bitmatrix.hpp $(SRC)/utils.hpp | $(BIN)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+$(BIN)/density: $(BIN)/density.o $(BIN)/density_evolution.o $(BIN)/distribution.o $(BIN)/utils.o | $(BIN)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
-$(BIN)/bitmatrix.o: $(SRC)/bitmatrix.cpp $(SRC)/bitmatrix.hpp $(SRC)/utils.hpp | $(BIN)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+$(BIN)/%.o: $(SRC)/%.cpp | $(BIN)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -MMD -MP -c $< -o $@
 
-$(BIN)/full_anneal.o: $(SRC)/full_anneal.cpp $(SRC)/bitmatrix.hpp $(SRC)/utils.hpp $(SRC)/xoropt.hpp | $(BIN)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(BIN)/random_regular.o: $(SRC)/random_regular.cpp $(SRC)/bitmatrix.hpp | $(BIN)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(BIN)/xoropt.o: $(SRC)/xoropt.cpp $(SRC)/bitmatrix.hpp $(SRC)/utils.hpp $(SRC)/xoropt.hpp | $(BIN)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(BIN)/utils.o: $(SRC)/utils.cpp $(SRC)/utils.hpp | $(BIN)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+-include $(wildcard $(BIN)/*.d)
 
 clean:
 	rm -rf $(BIN)
