@@ -171,4 +171,10 @@ bitmatrix direct_sum(const std::vector<bitmatrix> &blocks);
 
 bitmatrix block(const bitmatrix &B, size_t row_start, size_t row_end, size_t col_start, size_t col_end);
 
+//parity check matrix from Gallager's ensemble
+bitmatrix gallager(size_t k, size_t D, size_t bsize, std::mt19937_64 &eng);
+
+//F_2 matrix from erdos_renyi ensemble. p=0.5 is uniformly random matrix.
+bitmatrix erdos_renyi(size_t n, size_t m, double p, std::mt19937_64 &eng);
+
 #endif

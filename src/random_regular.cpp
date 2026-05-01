@@ -2,7 +2,6 @@
 #include <fstream>
 #include <random>
 #include "bitmatrix.hpp"
-#include "matrix_ensembles.hpp"
 
 int save_max_xorsat_instance(const bitmatrix &H, const bitvector &v, std::string filename) {
     std::ofstream outfile;
