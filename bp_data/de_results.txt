@@ -1,0 +1,60 @@
+Building src:density...
+Loading: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //src:density (0 packages loaded, 0 targets configured)
+INFO: Analyzed target //src:density (0 packages loaded, 0 targets configured).
+INFO: Found 1 target...
+[0 / 1] [Prepa] BazelWorkspaceStatusAction stable-status.txt
+Target //src:density up-to-date:
+  bazel-bin/src/density
+INFO: Elapsed time: 0.322s, Critical Path: 0.01s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+Running density evaluations...
+Executing with k=3, D=4...
+precision = 1e-06 bins = 2000 num_iterations = 2000
+threshold appears to be at least 0.167055845293798 - 0.167055964503087
+Executing with k=3, D=5...
+precision = 1e-06 bins = 2000 num_iterations = 2000
+threshold appears to be at least 0.113829314763178 - 0.113829374367823
+Executing with k=3, D=6...
+precision = 1e-06 bins = 2000 num_iterations = 2000
+threshold appears to be at least 0.0841220021911376 - 0.0841220617957823
+Executing with k=3, D=7...
+precision = 1e-06 bins = 2000 num_iterations = 2000
+threshold appears to be at least 0.0656028986714761 - 0.0656029582761209
+Executing with k=3, D=8...
+precision = 1e-06 bins = 2000 num_iterations = 2000
+threshold appears to be at least 0.0531171561075007 - 0.0531171859098231
+Executing with k=4, D=5...
+precision = 1e-06 bins = 2000 num_iterations = 2000
+threshold appears to be at least 0.153540372887095 - 0.153540492096384
+Executing with k=4, D=6...
+precision = 1e-06 bins = 2000 num_iterations = 2000
+threshold appears to be at least 0.116941154056367 - 0.116941213661012
+Executing with k=4, D=7...
+precision = 1e-06 bins = 2000 num_iterations = 2000
+threshold appears to be at least 0.0932317376763853 - 0.09323179728103
+Executing with k=4, D=8...
+precision = 1e-06 bins = 2000 num_iterations = 2000
+threshold appears to be at least 0.0768151880003347 - 0.0768152476049795
+Executing with k=5, D=6...
+precision = 1e-06 bins = 2000 num_iterations = 2000
+threshold appears to be at least 0.13741266731951 - 0.1374127865288
+Executing with k=5, D=7...
+precision = 1e-06 bins = 2000 num_iterations = 2000
+threshold appears to be at least 0.110880076940871 - 0.110880136545516
+Executing with k=5, D=8...
+precision = 1e-06 bins = 2000 num_iterations = 2000
+threshold appears to be at least 0.0922269225751637 - 0.0922269821798084
+Executing with k=6, D=7...
+precision = 1e-06 bins = 2000 num_iterations = 2000
+threshold appears to be at least 0.123571634343174 - 0.123571753552463
+Executing with k=6, D=8...
+precision = 1e-06 bins = 2000 num_iterations = 2000
+threshold appears to be at least 0.103413939534648 - 0.103413999139292
+Executing with k=7, D=8...
+precision = 1e-06 bins = 2000 num_iterations = 2000
+threshold appears to be at least 0.112108111436688 - 0.112108171041332
+All runs completed successfully!
