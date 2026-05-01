@@ -1,0 +1,75 @@
+random_regular 3 4 840
+random_regular 3 5 840
+random_regular 3 6 840
+random_regular 3 7 840
+random_regular 3 8 840
+random_regular 4 5 630
+random_regular 4 6 630
+random_regular 4 7 630
+random_regular 4 8 630
+random_regular 5 6 504
+random_regular 5 7 504
+random_regular 5 8 504
+random_regular 6 7 420
+random_regular 6 8 420
+random_regular 7 8 360
+full_anneal instance_3_4_840.tsv 1000000 > log_3_4_840_1.txt
+full_anneal instance_3_4_840.tsv 1000000 > log_3_4_840_2.txt
+full_anneal instance_3_4_840.tsv 1000000 > log_3_4_840_3.txt
+full_anneal instance_3_4_840.tsv 1000000 > log_3_4_840_4.txt
+full_anneal instance_3_5_840.tsv 1000000 > log_3_5_840_1.txt
+full_anneal instance_3_5_840.tsv 1000000 > log_3_5_840_2.txt
+full_anneal instance_3_5_840.tsv 1000000 > log_3_5_840_3.txt
+full_anneal instance_3_5_840.tsv 1000000 > log_3_5_840_4.txt
+full_anneal instance_3_6_840.tsv 1000000 > log_3_6_840_1.txt
+full_anneal instance_3_6_840.tsv 1000000 > log_3_6_840_2.txt
+full_anneal instance_3_6_840.tsv 1000000 > log_3_6_840_3.txt
+full_anneal instance_3_6_840.tsv 1000000 > log_3_6_840_4.txt
+full_anneal instance_3_7_840.tsv 1000000 > log_3_7_840_1.txt
+full_anneal instance_3_7_840.tsv 1000000 > log_3_7_840_2.txt
+full_anneal instance_3_7_840.tsv 1000000 > log_3_7_840_3.txt
+full_anneal instance_3_7_840.tsv 1000000 > log_3_7_840_4.txt
+full_anneal instance_3_8_840.tsv 1000000 > log_3_8_840_1.txt
+full_anneal instance_3_8_840.tsv 1000000 > log_3_8_840_2.txt
+full_anneal instance_3_8_840.tsv 1000000 > log_3_8_840_3.txt
+full_anneal instance_3_8_840.tsv 1000000 > log_3_8_840_4.txt
+full_anneal instance_4_5_630.tsv 1000000 > log_4_5_630_1.txt
+full_anneal instance_4_5_630.tsv 1000000 > log_4_5_630_2.txt
+full_anneal instance_4_5_630.tsv 1000000 > log_4_5_630_3.txt
+full_anneal instance_4_5_630.tsv 1000000 > log_4_5_630_4.txt
+full_anneal instance_4_6_630.tsv 1000000 > log_4_6_630_1.txt
+full_anneal instance_4_6_630.tsv 1000000 > log_4_6_630_2.txt
+full_anneal instance_4_6_630.tsv 1000000 > log_4_6_630_3.txt
+full_anneal instance_4_6_630.tsv 1000000 > log_4_6_630_4.txt
+full_anneal instance_4_7_630.tsv 1000000 > log_4_7_630_1.txt
+full_anneal instance_4_7_630.tsv 1000000 > log_4_7_630_2.txt
+full_anneal instance_4_7_630.tsv 1000000 > log_4_7_630_3.txt
+full_anneal instance_4_7_630.tsv 1000000 > log_4_7_630_4.txt
+full_anneal instance_4_8_630.tsv 1000000 > log_4_8_630_1.txt
+full_anneal instance_4_8_630.tsv 1000000 > log_4_8_630_2.txt
+full_anneal instance_4_8_630.tsv 1000000 > log_4_8_630_3.txt
+full_anneal instance_4_8_630.tsv 1000000 > log_4_8_630_4.txt
+full_anneal instance_5_6_504.tsv 1000000 > log_5_6_504_1.txt
+full_anneal instance_5_6_504.tsv 1000000 > log_5_6_504_2.txt
+full_anneal instance_5_6_504.tsv 1000000 > log_5_6_504_3.txt
+full_anneal instance_5_6_504.tsv 1000000 > log_5_6_504_4.txt
+full_anneal instance_5_7_504.tsv 1000000 > log_5_7_504_1.txt
+full_anneal instance_5_7_504.tsv 1000000 > log_5_7_504_2.txt
+full_anneal instance_5_7_504.tsv 1000000 > log_5_7_504_3.txt
+full_anneal instance_5_7_504.tsv 1000000 > log_5_7_504_4.txt
+full_anneal instance_5_8_504.tsv 1000000 > log_5_8_504_1.txt
+full_anneal instance_5_8_504.tsv 1000000 > log_5_8_504_2.txt
+full_anneal instance_5_8_504.tsv 1000000 > log_5_8_504_3.txt
+full_anneal instance_5_8_504.tsv 1000000 > log_5_8_504_4.txt
+full_anneal instance_6_7_420.tsv 1000000 > log_6_7_420_1.txt
+full_anneal instance_6_7_420.tsv 1000000 > log_6_7_420_2.txt
+full_anneal instance_6_7_420.tsv 1000000 > log_6_7_420_3.txt
+full_anneal instance_6_7_420.tsv 1000000 > log_6_7_420_4.txt
+full_anneal instance_6_8_420.tsv 1000000 > log_6_8_420_1.txt
+full_anneal instance_6_8_420.tsv 1000000 > log_6_8_420_2.txt
+full_anneal instance_6_8_420.tsv 1000000 > log_6_8_420_3.txt
+full_anneal instance_6_8_420.tsv 1000000 > log_6_8_420_4.txt
+full_anneal instance_7_8_360.tsv 1000000 > log_7_8_360_1.txt
+full_anneal instance_7_8_360.tsv 1000000 > log_7_8_360_2.txt
+full_anneal instance_7_8_360.tsv 1000000 > log_7_8_360_3.txt
+full_anneal instance_7_8_360.tsv 1000000 > log_7_8_360_4.txt
