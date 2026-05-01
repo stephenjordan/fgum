@@ -47,19 +47,6 @@ void anneal(walker &w, int iter, double minbeta, double maxbeta, std::mt19937_64
 //This is a greedy algorithm.
 void descend(walker &w, bool verbose = true);
 
-int truncation_heuristic(const xorsat_instance &I, bitvector &sol, bool verbose = true);
-
-void sort_instance(xorsat_instance &I, bool ascending, bool verbose = true);
-
-int sort_truncate_descend(const xorsat_instance &I, bitvector &sol, bool reverse, bool verbose);
-
-bool transfer_heaviest(xorsat_instance &from, xorsat_instance &to, size_t threshold);
-
-void merge(const xorsat_instance &from, xorsat_instance &to);
-
-int clauses_violated(const xorsat_instance &I, const bitvector &x);
-
-//Sergei Isakov's algorithm
-int partial_anneal(const xorsat_instance &I, size_t weight_cutoff, bitvector &sol, uint64_t seed);
+int prange(const xorsat_instance &I, bitvector &sol, bool verbose = true);
 
 #endif

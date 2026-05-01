@@ -181,48 +181,6 @@ size_t walker::num_cons() const {
     return I->BT.num_cols();
 }
 
-//routines to sort bitmatrix columns by Hamming weight-------------------------------------------------------------------
-
-typedef struct {
-    size_t index;
-    size_t weight;
-}colstats;
-
-//we want descending order
-bool greater_colstats(colstats i, colstats j) {
-    return ( i.weight > j.weight );
-}
-
-//we want descending order
-bool lesser_colstats(colstats i, colstats j) {
-    return ( i.weight < j.weight );
-}
-
-std::vector<size_t> sorting_permutation(const bitmatrix &H, bool ascending) {
-    std::vector<colstats> s(H.num_cols());
-    for(size_t i = 0; i < H.num_cols(); i++) {
-        s[i].index = i;
-        s[i].weight = H.col_vec(i).count();
-    }
-    if(ascending) std::sort(s.begin(), s.end(), lesser_colstats);
-    else std::sort(s.begin(), s.end(), greater_colstats);
-    std::vector<size_t> returnval(H.num_cols());
-    for(size_t i = 0; i < H.num_cols(); i++) returnval[i] = s[i].index;
-    return returnval;
-}
-
-bool is_sorted(const bitmatrix &H, bool ascending) {
-    size_t last_weight = H.col_vec(0).count();
-    size_t this_weight;
-    for(size_t i = 1; i < H.num_cols(); i++) {
-        this_weight = H.col_vec(i).count();
-        if(ascending && (this_weight < last_weight)) return false;
-        if(!ascending && (this_weight > last_weight)) return false;
-        last_weight = this_weight;
-    }
-    return true;
-}
-
 //optimization algorithms------------------------------------------------------------------------------------------------
 
 //Warning: does not automatically randomize the initial walker position. If you want that do w.randomize() first.
@@ -322,7 +280,7 @@ void descend(walker &w, bool verbose) {
     }
 }
 
-int truncation_heuristic(const xorsat_instance &I, bitvector &sol, bool verbose) {
+int prange(const xorsat_instance &I, bitvector &sol, bool verbose) {
     bitmatrix G, R;
     I.BT.reduced_row_echelon_decomp(G, R);
     bitvector y(I.BT.num_rows()); 
@@ -343,82 +301,3 @@ int truncation_heuristic(const xorsat_instance &I, bitvector &sol, bool verbose)
     }
     return violated;
 }
-
-void sort_instance(xorsat_instance &I, bool ascending, bool verbose) {
-    if(is_sorted(I.BT, ascending)) {
-        if(verbose) {
-            if(ascending) std::cout << "Instance is already ascending" << std::endl;
-            else std::cout << "Instance is already descending" << std::endl;
-        }
-        return;
-    }
-    std::vector<size_t> permutation = sorting_permutation(I.BT, ascending);
-    I.BT = permute_columns(I.BT, permutation);
-    I.v = permute_bits(I.v, permutation);
-    if(!is_sorted(I.BT, ascending)) std::cout << "Error: H is not sorted" << std::endl;
-}
-
-int sort_truncate_descend(const xorsat_instance &I, bitvector &sol, bool reverse, bool verbose) {
-    xorsat_instance IS = I;
-    sort_instance(IS, reverse, verbose);
-    truncation_heuristic(IS, sol, verbose);
-    walker w(IS);
-    w.set_x(sol);
-    descend(w, verbose);
-    sol = w.get_x();
-    return w.value();
-}
-
-bool transfer_heaviest(xorsat_instance &from, xorsat_instance &to, size_t threshold) {
-    bitmatrix B = from.BT.transpose();
-    bitmatrix Bheavy, Blight;
-    bitvector vheavy, vlight;
-    bitvector row;
-    for(size_t row_index = 0; row_index < B.num_rows(); row_index++) {
-        row = B.row_vec(row_index);
-        size_t weight = row.count();
-        if(weight > threshold) {
-            Bheavy.append_below(row);
-            vheavy.push_back(from.v.get(row_index));
-        }
-        else {
-            Blight.append_below(row);
-            vlight.push_back(from.v.get(row_index));
-        }
-    }
-    if(Bheavy.num_rows() == 0 || Blight.num_rows() == 0) {
-        notify("Error: transfer_heaviest results in empty instance.");
-        return false;
-    }
-    from.BT = Blight.transpose();
-    from.v = vlight;
-    to.BT = Bheavy.transpose();
-    to.v = vheavy;
-    return true;
-}
-
-void merge(const xorsat_instance &from, xorsat_instance &to) {
-    to.v.append(from.v);
-    to.BT.append_right(from.BT);
-}
-
-//Sergei Isakov's algorithm
-int partial_anneal(const xorsat_instance &I, size_t weight_cutoff, bitvector &sol, uint64_t seed) {
-    std::mt19937_64 eng(seed);
-    xorsat_instance Iheavy, Ilight;
-    Ilight = I;
-    transfer_heaviest(Ilight, Iheavy, weight_cutoff);
-    walker w1(Ilight);
-    w1.randomize(eng);
-    anneal(w1, 1000000, 0.5, 4.0, eng, false);
-    bitvector x = w1.get_x();
-    walker w2(I);
-    w2.set_x(x);
-    int violated_before_descent = w2.value();
-    descend(w2, false);
-    sol = w2.get_x();
-    int violated_after_descent = w2.value();
-    std::cout << violated_before_descent << " -> " << violated_after_descent << std::endl;
-    return w2.value();
-}
-
