@@ -2,7 +2,8 @@
 
 Companion code and data for:
 
-> N. Shutty, S. P. Jordan, M. Shao, S. Hadfield, J. S. Azariah, G. Smith,
+> N. Shutty, A. Mandal, S. Ragavan, Q. Buzet, A. Chailloux, N. C. Rubin,
+> A. Khan, S. Boulebnane, R. Shaydulin, J. Azariah, S. P. Jordan,
 > "Optimization Using Locally-Quantum Decoders,"
 > [arXiv:2604.24633](https://arxiv.org/abs/2604.24633) (2026).
 
@@ -275,7 +276,7 @@ The verifier source is a single ~400-line module at `qaoa_verifier/src/QaoaVerif
 
 ## References
 
-- N. Shutty, S. P. Jordan, M. Shao, S. Hadfield, J. S. Azariah, G. Smith, "Optimization Using Locally-Quantum Decoders," [arXiv:2604.24633](https://arxiv.org/abs/2604.24633) (2026).
+- N. Shutty, A. Mandal, S. Ragavan, Q. Buzet, A. Chailloux, N. C. Rubin, A. Khan, S. Boulebnane, R. Shaydulin, J. Azariah, S. P. Jordan, "Optimization Using Locally-Quantum Decoders," [arXiv:2604.24633](https://arxiv.org/abs/2604.24633) (2026).
 - M. Basso, E. Farhi, K. Marwaha, B. Villalonga, L. Zhou, "The Quantum Approximate Optimization Algorithm at High Depth for MaxCut on Large-Girth Regular Graphs and the Sherrington-Kirkpatrick Model," [arXiv:2110.14206](https://arxiv.org/abs/2110.14206) (2022).
 - E. Farhi, J. Goldstone, S. Gutmann, "A Quantum Approximate Optimization Algorithm," [arXiv:1411.4028](https://arxiv.org/abs/1411.4028) (2014).
 
