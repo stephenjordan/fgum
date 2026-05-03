@@ -85,8 +85,8 @@ The entire verifier is a single file: `src/QaoaVerifier.jl` (~400 lines).
 
 ## Related Software
 
-- [QaoaXorsat.jl](https://github.com/johnazariah/qaoa-xorsat) — Full research codebase with angle optimisation, gradient computation, GPU acceleration, and spectral analysis (Julia).
-- [QOKit](https://github.com/jpmorganchase/QOKit/tree/add-max-k-xor-sat/qokit/max_k_xor_sat) — Independent implementation used to cross-validate the optimised angles (C++, JP Morgan Chase).
+- [QOKit](https://github.com/jpmorganchase/QOKit/tree/add-max-k-xor-sat/qokit/max_k_xor_sat) — Primary implementation used to compute the optimised angles to p=16 (C++, double-double precision, JP Morgan Chase).
+- [QaoaXorsat.jl](https://github.com/johnazariah/qaoa-xorsat) — Independent implementation used to cross-validate the angle optimisation and develop the verification pipeline (Julia).
 
 ## References
 
