@@ -25,7 +25,7 @@ Requires a C++20 compiler and GNU Make. The Python scripts use only the standard
 | [`sa_data/`](sa_data/) | Simulated Annealing | `python3 generate_sa_table.py` | [sa_data/README.md](sa_data/README.md) |
 | [`bp_data/`](bp_data/) | DQI + BP | `python3 generate_bp_table.py` | [bp_data/README.md](bp_data/README.md) |
 | [`fgum_data/`](fgum_data/) | Regev + FGUM | `python3 generate_fgum_table.py` | [fgum_data/README.md](fgum_data/README.md) |
-| [`qaoa_data/`](qaoa_data/) | QAOA (p ≤ 16) | — (angle table only) | [qaoa_verifier/README.md](qaoa_verifier/README.md) |
+| [`qaoa_data/`](qaoa_data/) | QAOA (p ≤ 16) | — (angle table only) | [qaoa_data/README.md](qaoa_data/README.md) |
 | [`qaoa_verifier/`](qaoa_verifier/) | QAOA verification | `julia --project=. verify.jl` | [qaoa_verifier/README.md](qaoa_verifier/README.md) |
 
 Other directories: `src/` contains the C++ source, `test_data/` contains unit test fixtures.

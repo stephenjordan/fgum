@@ -83,11 +83,6 @@ The entire verifier is a single file: `src/QaoaVerifier.jl` (~400 lines).
 
 ---
 
-## Related Software
-
-- [QOKit](https://github.com/jpmorganchase/QOKit/tree/add-max-k-xor-sat/qokit/max_k_xor_sat) — Primary implementation used to compute the optimised angles to p=16 (C++, double-double precision, JP Morgan Chase).
-- [QaoaXorsat.jl](https://github.com/johnazariah/qaoa-xorsat) — Independent implementation used to cross-validate the angle optimisation and develop the verification pipeline (Julia).
-
 ## References
 
 - Basso, Farhi, Marwaha, Villalonga, Zhou, "The Quantum Approximate Optimization Algorithm at High Depth for MaxCut on Large-Girth Regular Graphs and the Sherrington-Kirkpatrick Model," [arXiv:2110.14206](https://arxiv.org/abs/2110.14206) (2022).
