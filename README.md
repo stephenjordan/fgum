@@ -42,16 +42,51 @@ The calculation of the performance of Regev+FGUM is done using the equations fro
 
 ## QAOA
 
-The performance of QAOA is the most difficult and computationally intensive calculation reported in Table 1. We have implemented to methods do do this, which are available at:
+The performance of QAOA is the most difficult and computationally intensive calculation reported in Table 1. We have implemented two methods to do this, which are available at:
 
-https://github.com/jpmorganchase/QOKit/tree/add-max-k-xor-sat/qokit/max_k_xor_sat
+- https://github.com/jpmorganchase/QOKit/tree/add-max-k-xor-sat/qokit/max_k_xor_sat
+- https://github.com/johnazariah/qaoa-xorsat
 
-and
+The optimised angles are provided in `qaoa_data/qaoa_angles_for_verifier.csv`. Generating these out to p=16 required extensive computations on modern GPUs.
 
-https://github.com/johnazariah/qaoa-xorsat
+### QAOA Verifier
 
-A stripped-down code that only verifies the energies implied by the optimized angles without also optimizing the angles is also available at:
+A self-contained Julia program (`qaoa_verifier/`) independently verifies the satisfaction fractions implied by the optimised angles. Given angles (γ, β) and problem parameters (k, D), it computes the exact satisfaction fraction c̃(γ, β) using the Basso/Villalonga branch tensor recurrence on the light-cone tree. It has no external dependencies beyond the Julia standard library.
 
-https://github.com/johnazariah/qaoa-verifier
+**Prerequisites:** [Julia 1.9+](https://julialang.org/downloads/)
 
-The optimized angles are provided here in qaoa_data/qaoa_angles_for_verifier.csv. Generating these out to p=16 required extensive computations on modern GPUs.
+**Quick start:**
+
+```sh
+cd qaoa_verifier
+julia --project=. -e 'using Pkg; Pkg.instantiate()'
+julia --project=. verify.jl
+```
+
+This reads `qaoa_data/qaoa_angles_for_verifier.csv` and verifies each configuration, printing the computed c̃ alongside the claimed value. Low-depth configurations (p ≤ 8) verify in under a second; p=12 takes about a minute; p=16 takes roughly 30 minutes.
+
+**Run the test suite:**
+
+```sh
+cd qaoa_verifier
+julia --project=. -e 'using Pkg; Pkg.test()'
+```
+
+**Verify a single configuration:**
+
+```sh
+cd qaoa_verifier
+julia --project=. verify.jl --k 3 --D 4 \
+    --gamma "0.550050516856796" \
+    --beta "0.287371347852009" \
+    --ctilde 0.676056660061
+```
+
+**Verify a custom CSV:**
+
+```sh
+cd qaoa_verifier
+julia --project=. verify.jl path/to/angles.csv
+```
+
+The verifier source is a single ~400-line Julia module at `qaoa_verifier/src/QaoaVerifier.jl`.

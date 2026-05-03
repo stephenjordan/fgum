@@ -1,0 +1,4 @@
+bin/
+*.o
+*.d
+qaoa_verifier/Manifest.toml
