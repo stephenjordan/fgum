@@ -65,7 +65,7 @@ c̃ = verify_xorsat(3, 4, [0.550], [0.287])
 c̃ = verify_maxcut(3, [0.615], [0.393])
 
 # General interface
-c̃ = verify_satisfaction_fraction(k, D, γ, β; clause_sign=±1)
+c̃ = verify_satisfaction_fraction(k, D, γ, β; clause_sign=1)   # XORSAT (+1) or MaxCut (-1)
 ```
 
 ---

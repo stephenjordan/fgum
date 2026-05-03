@@ -21,7 +21,7 @@ python3 generate_sa_table.py
 
 All results are included so step 2 can be skipped:
 
-- **`instance_k_D_n.tsv`** — 15 random instances, one per (k, D) pair with 3 ≤ k < D ≤ 8
+- **`instance_<k>_<D>_<n>.tsv`** — 15 random instances, one per (k, D) pair with 3 ≤ k < D ≤ 8 (e.g., `instance_3_4_840.tsv`, `instance_7_8_360.tsv`)
 - **`summary.txt`** — Aggregated anneal output (`grep satisfied log*`)
 - **`sa_jobs.txt`** — Full command list for reference
 
@@ -36,7 +36,7 @@ sign  var₁  var₂  …  varₖ    ← one line per clause (sign ±0.5, 0-inde
 
 ## Executables used
 
-- `bin/random_regular k D n` — generates a random instance
-- `bin/full_anneal instance.tsv sweeps` — runs SA with the given number of sweeps
+- `random_regular k D n` — generates a random instance
+- `full_anneal instance.tsv sweeps` — runs SA with the given number of sweeps
 
-Build with `make` from the repository root.
+Build with `make` from the repository root (executables go to `bin/`). The job scripts assume these are on your PATH.

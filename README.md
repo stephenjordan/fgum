@@ -50,4 +50,4 @@ All 254 configurations verify to Δ < 10⁻¹² against the claimed values. See 
 
 ## License
 
-MIT. See individual source files for third-party licenses (`src/argparse.hpp`).
+See individual source files for third-party licenses (e.g., `src/argparse.hpp`).

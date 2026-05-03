@@ -26,5 +26,5 @@ The `de.sh` script references a Bazel build path (`./bazel-bin/src/density`). If
 
 ## How it works
 
-1. `bin/density --k K --D D --bins 2000 --iterations 2000 --precision 0.000001` runs density evolution to find the BP decoding threshold for a (k, D)-regular LDPC code.
+1. `./bazel-bin/src/density --k K --D D --bins 2000 --iterations 2000 --precision 0.000001` runs density evolution to find the BP decoding threshold for a (k, D)-regular LDPC code (use `../bin/density` for Make builds).
 2. `generate_bp_table.py` parses the thresholds and applies the semicircle law: s(threshold) = 1/2 + sqrt(threshold * (1 - threshold)).
