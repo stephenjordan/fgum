@@ -7,7 +7,10 @@
 # Max-k-XORSAT using the Basso/Villalonga branch tensor recurrence.
 #
 # Usage:
-#   julia --project=. verify.jl                           # verify ../qaoa_data/qaoa_angles_for_verifier.csv
+#   julia --project=. verify.jl                           # verify all 254 configurations
+#   julia --project=. verify.jl --p 10                    # verify only depth p=10 (16 configs)
+#   julia --project=. verify.jl --max-p 12                # verify depths p=1..12
+#   julia --project=. verify.jl --filter-k 3 --filter-D 4 # verify only (k=3, D=4) across all depths
 #   julia --project=. verify.jl path/to/angles.csv        # verify a custom CSV
 #   julia --project=. verify.jl --k 3 --D 4 --gamma "0.55;0.72" --beta "0.36;0.21"
 #
@@ -143,26 +146,68 @@ end
 # Main
 # ──────────────────────────────────────────────────────────────────────────────
 
+function parse_filter_args(args)
+    filter_p = nothing
+    max_p = nothing
+    filter_k = nothing
+    filter_D = nothing
+    remaining = String[]
+
+    i = 1
+    while i ≤ length(args)
+        arg = args[i]
+        if arg == "--p"
+            filter_p = parse(Int, args[i+1]); i += 2
+        elseif arg == "--max-p"
+            max_p = parse(Int, args[i+1]); i += 2
+        elseif arg == "--filter-k"
+            filter_k = parse(Int, args[i+1]); i += 2
+        elseif arg == "--filter-D"
+            filter_D = parse(Int, args[i+1]); i += 2
+        else
+            push!(remaining, arg); i += 1
+        end
+    end
+
+    (filter_p=filter_p, max_p=max_p, filter_k=filter_k, filter_D=filter_D, remaining=remaining)
+end
+
+function should_include(row, filters)
+    filters.filter_p !== nothing && row.p != filters.filter_p && return false
+    filters.max_p !== nothing && row.p > filters.max_p && return false
+    filters.filter_k !== nothing && row.k != filters.filter_k && return false
+    filters.filter_D !== nothing && row.D != filters.filter_D && return false
+    true
+end
+
 function main()
     # Default angles file: ../qaoa_data/qaoa_angles_for_verifier.csv
     default_csv = joinpath(@__DIR__, "..", "qaoa_data", "qaoa_angles_for_verifier.csv")
 
-    if isempty(ARGS)
+    filters = parse_filter_args(ARGS)
+    has_filters = filters.filter_p !== nothing || filters.max_p !== nothing ||
+                  filters.filter_k !== nothing || filters.filter_D !== nothing
+    remaining = filters.remaining
+
+    if isempty(remaining)
         if isfile(default_csv)
-            return run_csv(default_csv)
-        else
+            return run_csv(default_csv; filters)
+        elseif !has_filters
             print_usage()
             return 0
+        else
+            println("Error: no angles CSV found at $default_csv")
+            return 1
         end
     end
 
     # Check if first arg is a file
-    if isfile(ARGS[1])
-        return run_csv(ARGS[1])
-    elseif startswith(ARGS[1], "--")
+    if isfile(remaining[1])
+        return run_csv(remaining[1]; filters)
+    elseif startswith(remaining[1], "--")
         return run_cli()
     else
-        println("Error: '$(ARGS[1])' is not a file or a recognised option.")
+        println("Error: '$(remaining[1])' is not a file or a recognised option.")
         return 1
     end
 end
@@ -173,8 +218,11 @@ QAOA Satisfaction Fraction Verifier
 ====================================
 
 Usage:
-  julia --project=. verify.jl                         # verify ../qaoa_data/qaoa_angles_for_verifier.csv
-  julia --project=. verify.jl <angles.csv>            # verify a custom CSV
+  julia --project=. verify.jl                         # verify all 254 configurations
+  julia --project=. verify.jl --p 10                   # verify only depth p=10
+  julia --project=. verify.jl --max-p 12               # verify depths p=1..12
+  julia --project=. verify.jl --filter-k 3 --filter-D 4  # verify only (k=3, D=4)
+  julia --project=. verify.jl <angles.csv>             # verify a custom CSV
   julia --project=. verify.jl --k K --D D --gamma γ₁;γ₂;...;γₚ --beta β₁;β₂;...;βₚ [--clause-sign ±1] [--ctilde claimed]
 
 CSV format (header line starting with # is skipped):
@@ -183,22 +231,38 @@ CSV format (header line starting with # is skipped):
 """)
 end
 
-function run_csv(filepath::String)
+function run_csv(filepath::String; filters=(
+        filter_p=nothing, max_p=nothing, filter_k=nothing, filter_D=nothing,
+        remaining=String[]))
     println("╔══════════════════════════════════════════════════════════════════╗")
     println("║  QAOA Satisfaction Fraction Verifier                            ║")
     println("║  Companion to arXiv:2604.24633                                 ║")
     println("╚══════════════════════════════════════════════════════════════════╝")
     println()
     println("Reading angles from: $filepath")
-    println()
 
-    rows = parse_csv(filepath)
-    if isempty(rows)
+    all_rows = parse_csv(filepath)
+    if isempty(all_rows)
         println("No valid rows found in $filepath")
         return 1
     end
 
-    println("Found $(length(rows)) configurations to verify.")
+    rows = filter(r -> should_include(r, filters), all_rows)
+    if isempty(rows)
+        println("No configurations match the given filters.")
+        return 1
+    end
+
+    filter_desc = String[]
+    filters.filter_p !== nothing && push!(filter_desc, "p=$(filters.filter_p)")
+    filters.max_p !== nothing && push!(filter_desc, "p≤$(filters.max_p)")
+    filters.filter_k !== nothing && push!(filter_desc, "k=$(filters.filter_k)")
+    filters.filter_D !== nothing && push!(filter_desc, "D=$(filters.filter_D)")
+    if !isempty(filter_desc)
+        println("Filter: $(join(filter_desc, ", "))")
+    end
+    println()
+    println("Verifying $(length(rows)) of $(length(all_rows)) configurations.")
     println("─" ^ 100)
 
     any_failed = false
