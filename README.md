@@ -73,4 +73,7 @@ Both verifiers agree to Δ < 10⁻¹² on all tested configurations.
 
 ## License
 
-Except as otherwise noted, the code and data here is released under the MIT license, as described in LICENSE.txt. See individual source files for third-party licenses (e.g., `src/argparse.hpp` and `qaoa_verifier_cpp/LICENSE`).
+Except as otherwise noted, the code and data here is released under the MIT license, as described in [LICENSE.txt](LICENSE.txt).
+
+- `qaoa_verifier_cpp/` is licensed under the **Apache License 2.0** (see [qaoa_verifier_cpp/LICENSE](qaoa_verifier_cpp/LICENSE)), extracted from [QOKit](https://github.com/jpmorganchase/QOKit) by JPMorgan Chase.
+- `src/argparse.hpp` has its own license — see the file header.
