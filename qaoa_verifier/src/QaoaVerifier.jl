@@ -55,7 +55,9 @@ ORCID: https://orcid.org/0009-0007-9870-1970
 """
 module QaoaVerifier
 
-export verify_satisfaction_fraction, verify_xorsat, verify_maxcut
+using DoubleFloats: Double64
+
+export verify_satisfaction_fraction, verify_xorsat, verify_maxcut, Double64
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Section 1: Types
@@ -343,6 +345,22 @@ function _compute_f_table(trig_table::Matrix{Complex{T}}, bit_count::Int, N::Int
 end
 
 """
+    _compute_f_value(trig_table, config, transitions)
+
+Compute the mixer weight f(a) for a single configuration on-the-fly,
+avoiding allocation of the full f_table vector. Used in the memory-efficient
+path for high-p evaluation.
+"""
+function _compute_f_value(trig_table::Matrix{Complex{T}}, config::Int, transitions::Int) where T
+    weight = complex(one(T) / 2)
+    @inbounds for j in 1:transitions
+        d = xor((config >> (j - 1)) & 1, (config >> j) & 1)
+        weight *= trig_table[d + 1, j]
+    end
+    weight
+end
+
+"""
     basso_root_parity(configuration, p)
 
 Extract the parity sign (-1)^{a⁰} from the root bit of a branch configuration.
@@ -361,6 +379,10 @@ Returns (value, log_total_scale, S_normalized) where:
 - value is the satisfaction fraction c̃
 - log_total_scale is the accumulated log-scale factor
 - S_normalized is the normalised parity correlator
+
+For p ≥ 14, uses a memory-efficient path that recomputes f(a) on-the-fly
+instead of storing the full f_table, reducing peak memory from ~5N to ~3N
+complex vectors (enabling p=14 on 64 GB machines with Double64).
 """
 function _evaluate_normalized(
     params::TreeParams,
@@ -380,29 +402,26 @@ function _evaluate_normalized(
     clause_sign in (-1, 1) || throw(ArgumentError(
         "clause_sign must be ±1, got $clause_sign"))
 
-    # ── Precompute angle-dependent tables ──────────────────────────────────
+    # ── Precompute angle-dependent tables (small) ──────────────────────────
 
     gamma_full = build_gamma_full_vector(angles)
     trig_table = basso_trig_table(angles)
-    f_table = _compute_f_table(trig_table, bit_count, N, T)
+    transitions = bit_count - 1  # = 2p
 
-    # Phase arguments and constraint kernel: κ(a) = cos(Γ·spins(a)/2)
+    # Memory-efficient path: don't store f_table for high p
+    use_f_table = p ≤ 13
+    f_table = use_f_table ? _compute_f_table(trig_table, bit_count, N, T) : nothing
+
+    # Build kernel_hat in-place (reuse vector, don't keep separate kernel)
     half = one(T) / 2
-    phase_args = Vector{T}(undef, N)
-    kernel = Vector{Complex{T}}(undef, N)
+    kernel_hat = Vector{Complex{T}}(undef, N)
     for config in 0:N-1
         ph = _phase_dot(gamma_full, config, bit_count)
-        @inbounds phase_args[config + 1] = ph
-        @inbounds kernel[config + 1] = complex(cos(half * ph))
+        @inbounds kernel_hat[config + 1] = complex(cos(half * ph))
     end
-    kernel_hat = wht!(copy(kernel))
+    wht!(kernel_hat)
 
     # ── Branch tensor iteration with per-step normalisation ────────────────
-    #
-    # Before each power operation, normalise to unit max-magnitude if the
-    # magnitude exceeds a safety threshold, and track the scale in log space.
-    # This prevents Float64 overflow at high (k, D, p) while preserving
-    # precision when normalisation is unnecessary.
 
     _NORM_THRESHOLD = T(1e30)
 
@@ -411,9 +430,15 @@ function _evaluate_normalized(
     log_s = zero(T)              # accumulated log-scale on B
 
     for t in 1:p
-        # child_weights = f_table .* B, then WHT in-place
-        @inbounds @simd for i in 1:N
-            scratch[i] = f_table[i] * B[i]
+        # child_weights = f(a) · B(a), then WHT in-place
+        if use_f_table
+            @inbounds @simd for i in 1:N
+                scratch[i] = f_table[i] * B[i]
+            end
+        else
+            @inbounds for i in 1:N
+                scratch[i] = _compute_f_value(trig_table, i - 1, transitions) * B[i]
+            end
         end
         wht!(scratch)
 
@@ -463,30 +488,37 @@ function _evaluate_normalized(
     # Root kernel:  κᵣ(a) = i·sin(c_s · Γ·spins(a) / 2)
     # Parity correlator: S = Σ κᵣ(a) · [m ★ … ★ m](a)  (k-fold convolution)
     # Satisfaction fraction: c̃ = (1 + c_s · S) / 2
-
-    root_msg = Vector{Complex{T}}(undef, N)
-    for config in 0:N-1
-        parity = basso_root_parity(config, p)
-        @inbounds root_msg[config + 1] = parity * f_table[config + 1] * B[config + 1]
-    end
+    #
+    # Reuse scratch for root_msg to avoid an extra allocation.
 
     cs = T(clause_sign)
-    root_kernel = Vector{Complex{T}}(undef, N)
     for config in 0:N-1
-        @inbounds root_kernel[config + 1] = complex(zero(T), sin(half * cs * phase_args[config + 1]))
+        parity = basso_root_parity(config, p)
+        f_val = use_f_table ? f_table[config + 1] : _compute_f_value(trig_table, config, transitions)
+        @inbounds scratch[config + 1] = parity * f_val * B[config + 1]
     end
 
-    # Root fold with normalisation: WHT(root_msg), normalise, raise to ^k
-    msg_hat = wht!(complex.(root_msg))
-    mh_scale = maximum(abs, msg_hat)
+    # WHT(root_msg), normalise, raise to ^k, iWHT → conv
+    # Reuse B for the convolution result (B is no longer needed)
+    wht!(scratch)
+    mh_scale = maximum(abs, scratch)
     if mh_scale > _NORM_THRESHOLD
-        msg_hat .*= one(T) / mh_scale
+        scratch .*= one(T) / mh_scale
     else
         mh_scale = one(T)
     end
-    msg_hat_power = msg_hat .^ k
-    conv = iwht(msg_hat_power)
-    S_normalized = sum(root_kernel .* conv)
+    @inbounds @simd for i in 1:N
+        B[i] = _fast_pow(scratch[i], k)
+    end
+    iwht!(B)  # B now holds conv
+
+    # Compute S = Σ κᵣ(a) · conv(a)  without storing root_kernel
+    S_normalized = zero(Complex{T})
+    for config in 0:N-1
+        ph = _phase_dot(gamma_full, config, bit_count)
+        rk = complex(zero(T), sin(half * cs * ph))
+        @inbounds S_normalized += rk * B[config + 1]
+    end
 
     # Total log-scale
     log_total_scale = k * (log_s + log(mh_scale))
@@ -513,18 +545,22 @@ end
 # ══════════════════════════════════════════════════════════════════════════════
 
 """
-    verify_satisfaction_fraction(k, D, γ, β; clause_sign=1) -> Float64
+    verify_satisfaction_fraction(k, D, γ, β; clause_sign=1, T=Double64) -> Float64
 
 Compute the exact QAOA satisfaction fraction c̃(γ, β) for the root clause
 of a D-regular Max-k-XORSAT instance at QAOA depth p = length(γ).
 
+All internal arithmetic runs in precision `T` (defaults to `Double64` for
+~31 decimal digits). The result is returned as `Float64`.
+
 # Arguments
 - `k::Int`: constraint arity (hyperedge size). k=2 for MaxCut.
 - `D::Int`: variable degree (graph regularity).
-- `γ::Vector{Float64}`: problem (phase-separator) angles, length p.
-- `β::Vector{Float64}`: mixer angles, length p.
+- `γ::AbstractVector{<:Real}`: problem (phase-separator) angles, length p.
+- `β::AbstractVector{<:Real}`: mixer angles, length p.
 - `clause_sign::Int=1`: +1 for XORSAT clause (1+Z₁⋯Zₖ)/2,
                          -1 for MaxCut clause (1-Z₁Z₂)/2.
+- `T::Type{<:Real}=Double64`: arithmetic precision for the evaluation.
 
 # Returns
 The satisfaction fraction c̃ ∈ [0, 1].
@@ -539,9 +575,10 @@ c̃ = verify_satisfaction_fraction(2, 3,
     clause_sign = -1)
 # c̃ ≈ 0.6925
 
-# Max-3-XORSAT on 4-regular, depth 1
+# Max-3-XORSAT on 4-regular, depth 1 (explicit Float64 if you know it's safe)
 c̃ = verify_satisfaction_fraction(3, 4,
-    [3.6916431695847245], [0.28737134801591857])
+    [3.6916431695847245], [0.28737134801591857];
+    T = Float64)
 # c̃ ≈ 0.6761
 ```
 """
@@ -549,35 +586,34 @@ function verify_satisfaction_fraction(
     k::Int, D::Int,
     γ::AbstractVector{<:Real}, β::AbstractVector{<:Real};
     clause_sign::Int = 1,
+    T::Type{<:Real} = Double64,
 )::Float64
     params = TreeParams(k, D, length(γ))
-    angles = QAOAAngles(Float64.(γ), Float64.(β))
+    angles = QAOAAngles(T.(γ), T.(β))
     result = _evaluate_normalized(params, angles; clause_sign)
     Float64(result.value)
 end
 
 """
-    verify_maxcut(D, γ, β) -> Float64
+    verify_maxcut(D, γ, β; T=Double64) -> Float64
 
 Compute the exact QAOA satisfaction fraction for MaxCut (k=2, clause_sign=-1)
 on a D-regular graph.
-
-Equivalent to `verify_satisfaction_fraction(2, D, γ, β; clause_sign=-1)`.
 """
-function verify_maxcut(D::Int, γ::AbstractVector{<:Real}, β::AbstractVector{<:Real})::Float64
-    verify_satisfaction_fraction(2, D, γ, β; clause_sign = -1)
+function verify_maxcut(D::Int, γ::AbstractVector{<:Real}, β::AbstractVector{<:Real};
+                       T::Type{<:Real} = Double64)::Float64
+    verify_satisfaction_fraction(2, D, γ, β; clause_sign = -1, T)
 end
 
 """
-    verify_xorsat(k, D, γ, β) -> Float64
+    verify_xorsat(k, D, γ, β; T=Double64) -> Float64
 
 Compute the exact QAOA satisfaction fraction for Max-k-XORSAT (clause_sign=+1)
 on a D-regular hypergraph.
-
-Equivalent to `verify_satisfaction_fraction(k, D, γ, β; clause_sign=1)`.
 """
-function verify_xorsat(k::Int, D::Int, γ::AbstractVector{<:Real}, β::AbstractVector{<:Real})::Float64
-    verify_satisfaction_fraction(k, D, γ, β; clause_sign = 1)
+function verify_xorsat(k::Int, D::Int, γ::AbstractVector{<:Real}, β::AbstractVector{<:Real};
+                       T::Type{<:Real} = Double64)::Float64
+    verify_satisfaction_fraction(k, D, γ, β; clause_sign = 1, T)
 end
 
 end # module QaoaVerifier
