@@ -1,0 +1,186 @@
+{
+  "schema": "fgum-manuscript-table-values-v1",
+  "description": "Rounded threshold and score values, and conservative certified bounds displayed in the accompanying manuscript. These are comparison targets, not certificate outputs.",
+  "pairs": [
+    {
+      "k": 3,
+      "D": 4,
+      "e_core": "0.655265269543",
+      "fgum_score": "0.8923",
+      "beta_printed": "0.141267",
+      "upper_bounds": {
+        "exterior_U": "-1.082e-4",
+        "central_Gamma_second": "-1.287e-1",
+        "spectral_radius": "0.339728"
+      }
+    },
+    {
+      "k": 3,
+      "D": 5,
+      "e_core": "0.475116653742",
+      "fgum_score": "0.8360",
+      "beta_printed": "0.217495",
+      "upper_bounds": {
+        "exterior_U": "-7.759e-5",
+        "central_Gamma_second": "-1.358e-1",
+        "spectral_radius": "0.421491"
+      }
+    },
+    {
+      "k": 3,
+      "D": 6,
+      "e_core": "0.367631229842",
+      "fgum_score": "0.7826",
+      "beta_printed": "0.303959",
+      "upper_bounds": {
+        "exterior_U": "-6.080e-5",
+        "central_Gamma_second": "-1.091e-1",
+        "spectral_radius": "0.463278"
+      }
+    },
+    {
+      "k": 3,
+      "D": 7,
+      "e_core": "0.297416510038",
+      "fgum_score": "0.7585",
+      "beta_printed": "0.399564",
+      "upper_bounds": {
+        "exterior_U": "-5.017e-5",
+        "central_Gamma_second": "-3.863e-4",
+        "spectral_radius": "0.491236"
+      }
+    },
+    {
+      "k": 3,
+      "D": 8,
+      "e_core": "0.248433642904",
+      "fgum_score": "0.7270",
+      "beta_printed": "0.503508",
+      "upper_bounds": {
+        "exterior_U": "-4.280e-5",
+        "central_Gamma_second": "-3.686e-1",
+        "spectral_radius": "0.512586"
+      }
+    },
+    {
+      "k": 4,
+      "D": 5,
+      "e_core": "0.749207275336",
+      "fgum_score": "0.9216",
+      "beta_printed": "0.004350",
+      "upper_bounds": {
+        "exterior_U": "-1.202e-3",
+        "central_Gamma_second": "-1.373e-3",
+        "spectral_radius": "0.101723"
+      }
+    },
+    {
+      "k": 4,
+      "D": 6,
+      "e_core": "0.597146824801",
+      "fgum_score": "0.8615",
+      "beta_printed": "0.006797",
+      "upper_bounds": {
+        "exterior_U": "-1.093e-3",
+        "central_Gamma_second": "-5.389e-4",
+        "spectral_radius": "0.179981"
+      }
+    },
+    {
+      "k": 4,
+      "D": 7,
+      "e_core": "0.495231513021",
+      "fgum_score": "0.8265",
+      "beta_printed": "0.009788",
+      "upper_bounds": {
+        "exterior_U": "-1.012e-3",
+        "central_Gamma_second": "-2.107e-1",
+        "spectral_radius": "0.232882"
+      }
+    },
+    {
+      "k": 4,
+      "D": 8,
+      "e_core": "0.422397826194",
+      "fgum_score": "0.7902",
+      "beta_printed": "0.013322",
+      "upper_bounds": {
+        "exterior_U": "-9.495e-4",
+        "central_Gamma_second": "-6.869e-2",
+        "spectral_radius": "0.271465"
+      }
+    },
+    {
+      "k": 5,
+      "D": 6,
+      "e_core": "0.799948117424",
+      "fgum_score": "0.9312",
+      "beta_printed": "0.000152",
+      "upper_bounds": {
+        "exterior_U": "-2.851e-3",
+        "central_Gamma_second": "-1.497e-3",
+        "spectral_radius": "0.019509"
+      }
+    },
+    {
+      "k": 5,
+      "D": 7,
+      "e_core": "0.666350466911",
+      "fgum_score": "0.8853",
+      "beta_printed": "0.000240",
+      "upper_bounds": {
+        "exterior_U": "-2.720e-3",
+        "central_Gamma_second": "-2.500e-3",
+        "spectral_radius": "0.051638"
+      }
+    },
+    {
+      "k": 5,
+      "D": 8,
+      "e_core": "0.570739295525",
+      "fgum_score": "0.8441",
+      "beta_printed": "0.000352",
+      "upper_bounds": {
+        "exterior_U": "-2.616e-3",
+        "central_Gamma_second": "-2.195e-3",
+        "spectral_radius": "0.079882"
+      }
+    },
+    {
+      "k": 6,
+      "D": 7,
+      "e_core": "0.833330351611",
+      "fgum_score": "0.9427",
+      "beta_printed": "5.87e-6",
+      "upper_bounds": {
+        "exterior_U": "-4.987e-3",
+        "central_Gamma_second": "-3.154e-5",
+        "spectral_radius": "0.002578"
+      }
+    },
+    {
+      "k": 6,
+      "D": 8,
+      "e_core": "0.714253766656",
+      "fgum_score": "0.8962",
+      "beta_printed": "9.33e-6",
+      "upper_bounds": {
+        "exterior_U": "-1.713e-3",
+        "central_Gamma_second": "-4.959e-4",
+        "spectral_radius": "0.010985"
+      }
+    },
+    {
+      "k": 7,
+      "D": 8,
+      "e_core": "0.857142708434",
+      "fgum_score": "0.9481",
+      "beta_printed": "2.5e-7",
+      "upper_bounds": {
+        "exterior_U": "-7.589e-3",
+        "central_Gamma_second": "-7.686e-4",
+        "spectral_radius": "0.000256"
+      }
+    }
+  ]
+}

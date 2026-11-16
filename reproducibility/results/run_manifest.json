@@ -1,0 +1,170 @@
+{
+  "expected_parameter_pairs": [
+    [
+      3,
+      4
+    ],
+    [
+      3,
+      5
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      3,
+      7
+    ],
+    [
+      3,
+      8
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      4,
+      6
+    ],
+    [
+      4,
+      7
+    ],
+    [
+      4,
+      8
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      5,
+      7
+    ],
+    [
+      5,
+      8
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      6,
+      8
+    ],
+    [
+      7,
+      8
+    ]
+  ],
+  "failures": [],
+  "interval_decimal_precision": 80,
+  "mpmath": "1.3.0",
+  "provenance": "Fresh reconstruction from the manuscript equations",
+  "python": "3.12.14",
+  "schema": "fgum-certificate-run-v1",
+  "source_sha256": {
+    "certify_core.py": "3612e3dde06a81054c3f9eaa4b910797f351da20c0831088b97547ae6c5a9d37",
+    "generate_tables.py": "16a30e138d8c441ed7c847e1d21b3b29c5b05b422415bc8c593003d454aba2ed",
+    "reference_values.json": "ece1038aca2d40f40166417028d9982f58ce627b4d85c4e7012c2db5475b10d1",
+    "requirements.txt": "a699f46ed76bd216f1081b6b2330e4fb45d7c8c5a5354b208694d6590a5a8645",
+    "run_all.py": "917bbbc12348096fbb3036ff92f1c1b8d13b1bb9e466938fa12a71d6fa651b6b"
+  },
+  "status": "passed",
+  "verified_parameter_pairs": [
+    {
+      "D": 4,
+      "file": "certificate_k3_D4.json",
+      "k": 3,
+      "verified": true
+    },
+    {
+      "D": 5,
+      "file": "certificate_k3_D5.json",
+      "k": 3,
+      "verified": true
+    },
+    {
+      "D": 6,
+      "file": "certificate_k3_D6.json",
+      "k": 3,
+      "verified": true
+    },
+    {
+      "D": 7,
+      "file": "certificate_k3_D7.json",
+      "k": 3,
+      "verified": true
+    },
+    {
+      "D": 8,
+      "file": "certificate_k3_D8.json",
+      "k": 3,
+      "verified": true
+    },
+    {
+      "D": 5,
+      "file": "certificate_k4_D5.json",
+      "k": 4,
+      "verified": true
+    },
+    {
+      "D": 6,
+      "file": "certificate_k4_D6.json",
+      "k": 4,
+      "verified": true
+    },
+    {
+      "D": 7,
+      "file": "certificate_k4_D7.json",
+      "k": 4,
+      "verified": true
+    },
+    {
+      "D": 8,
+      "file": "certificate_k4_D8.json",
+      "k": 4,
+      "verified": true
+    },
+    {
+      "D": 6,
+      "file": "certificate_k5_D6.json",
+      "k": 5,
+      "verified": true
+    },
+    {
+      "D": 7,
+      "file": "certificate_k5_D7.json",
+      "k": 5,
+      "verified": true
+    },
+    {
+      "D": 8,
+      "file": "certificate_k5_D8.json",
+      "k": 5,
+      "verified": true
+    },
+    {
+      "D": 7,
+      "file": "certificate_k6_D7.json",
+      "k": 6,
+      "verified": true
+    },
+    {
+      "D": 8,
+      "file": "certificate_k6_D8.json",
+      "k": 6,
+      "verified": true
+    },
+    {
+      "D": 8,
+      "file": "certificate_k7_D8.json",
+      "k": 7,
+      "verified": true
+    }
+  ]
+}

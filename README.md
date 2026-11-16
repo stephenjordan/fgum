@@ -7,7 +7,9 @@ Companion code and data for:
 > "Optimization Using Locally-Quantum Decoders,"
 > [arXiv:2604.24633](https://arxiv.org/abs/2604.24633) (2026).
 
-Everything needed to reproduce Table 1 of the paper is here. Each column of the table has its own directory with scripts, data, and a README explaining how to run it.
+This repository contains the scripts and data for Table 1, together with the interval checks supporting the FGUM thresholds in Section 5 and Appendix A. Each calculation has a directory with its own instructions.
+
+Archived releases are available on Zenodo at [doi:10.5281/zenodo.20173447](https://doi.org/10.5281/zenodo.20173447). This DOI covers all versions and resolves to the latest published release.
 
 ## Quick Start
 
@@ -16,7 +18,7 @@ make          # build C++ tools (SA solver, instance generator, density evolutio
 make check    # run unit tests
 ```
 
-Requires a C++20 compiler and GNU Make. The Python scripts use only the standard library. The Julia QAOA verifier requires [Julia 1.9+](https://julialang.org/downloads/). The C++ QAOA verifier requires CMake 3.16+ and a C++17 compiler.
+Requires a C++20 compiler and GNU Make. The table-generating Python scripts use only the standard library. The FGUM interval certificate additionally requires `mpmath==1.3.0`, as specified in [`reproducibility/requirements.txt`](reproducibility/requirements.txt). The Julia QAOA verifier requires [Julia 1.9+](https://julialang.org/downloads/). The C++ QAOA verifier requires CMake 3.16+ and a C++17 compiler.
 
 ## Table 1 — Directory Guide
 
@@ -25,11 +27,26 @@ Requires a C++20 compiler and GNU Make. The Python scripts use only the standard
 | [`sa_data/`](sa_data/) | Simulated Annealing | `python3 generate_sa_table.py` | [sa_data/README.md](sa_data/README.md) |
 | [`bp_data/`](bp_data/) | DQI + BP | `python3 generate_bp_table.py` | [bp_data/README.md](bp_data/README.md) |
 | [`fgum_data/`](fgum_data/) | Regev + FGUM | `python3 generate_fgum_table.py` | [fgum_data/README.md](fgum_data/README.md) |
+| [`reproducibility/`](reproducibility/) | FGUM threshold certificate (Section 5 and Appendix A) | `python3 run_all.py` | [reproducibility/README.md](reproducibility/README.md) |
 | [`qaoa_data/`](qaoa_data/) | QAOA (p ≤ 16) | — (angle table only) | [qaoa_data/README.md](qaoa_data/README.md) |
 | [`qaoa_verifier/`](qaoa_verifier/) | QAOA verification (Julia) | `julia --project=. verify.jl` | [qaoa_verifier/README.md](qaoa_verifier/README.md) |
 | [`qaoa_verifier_cpp/`](qaoa_verifier_cpp/) | QAOA verification (C++) | `make verify` | [qaoa_verifier_cpp/README.md](qaoa_verifier_cpp/README.md) |
 
 Other directories: `src/` contains the C++ source, `test_data/` contains unit test fixtures.
+
+## Verifying the FGUM Thresholds and Scores
+
+The FGUM score generator uses the core-balance threshold from Section 5 and Appendix A for all fifteen integer pairs `3 <= k < D <= 8`. The separate interval certificate verifies the root enclosures, stability, and finite inequalities used in the appendix.
+
+From the repository root:
+
+```sh
+python3 -m pip install -r reproducibility/requirements.txt
+python3 reproducibility/verify_checksums.py
+python3 reproducibility/run_all.py
+```
+
+The driver runs each parameter pair in a separate process and writes fresh results to `reproducibility/generated/`. The committed [`reproducibility/results/`](reproducibility/results/) directory contains the frozen results, including interval bounds and the score table. See [`reproducibility/README.md`](reproducibility/README.md) for the calculation, provenance, and commands for individual pairs.
 
 ## Verifying the QAOA Results
 
