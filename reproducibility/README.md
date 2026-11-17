@@ -5,11 +5,11 @@ all fifteen integer pairs `3 <= k < D <= 8`, together with the finite
 inequalities used in Section 5 and Appendix A of *Optimization Using
 Locally-Quantum Decoders*.
 
-The implementation was reconstructed from the manuscript's equations because
-the supplied repository and its available Git history did not contain the
-ancillary certificate package. All frozen results here were freshly generated
-and verified by this implementation. They are not recovered outputs from an
-earlier calculation.
+This is the single maintained interval-certificate implementation. It was
+reconstructed from the manuscript's equations, and its numerical results have
+been cross-checked against the recovered original computations. The frozen
+results in `results/` were generated and replayed by this implementation and
+retain outward-rounded interval endpoints.
 
 ## Requirements
 
@@ -23,7 +23,8 @@ python3 -m pip install -r reproducibility/requirements.txt
 ```
 
 The interval programs enforce the pinned mpmath version. The ordinary numerical
-score generator in `fgum_data/` requires only Python's standard library.
+score generator in `fgum_data/` and the optional finite-size experiments in
+`experiments/` require only Python's standard library.
 
 ## Verify the frozen results
 
@@ -103,12 +104,29 @@ balance root and exact rational Hamming-weight averages.
 | `results/run_manifest.json` | Completion status, runtime versions, and source hashes |
 | `SHA256SUMS`, `verify_checksums.py` | Frozen package integrity manifest and checker |
 | `test_certificate.py` | Replay acceptance and deliberate-corruption rejection checks |
+| `experiments/` | Optional finite-size Gallager sampling, peeling, and exact binary-rank diagnostics |
+| `experiments/example/` | A small recorded experiment with its configuration, seeds, trial outcomes, and summaries |
 
 Run the replay regression checks with:
 
 ```sh
 python3 -m unittest discover -s reproducibility -p 'test_certificate.py'
 ```
+
+## Optional finite-size rank experiments
+
+The [experiment instructions](experiments/README.md) give commands for a small
+run, a sweep over several matrix sizes, and an explicitly labeled fixed-count
+erasure model. The default model selects each first-layer block independently
+with probability `e`, as in the manuscript. The experiment records its
+parameters and random seeds, individual exact-rank outcomes, and empirical
+summary statistics.
+
+Threshold reference values are read from the existing certificates in
+`results/`. The experiment adds no threshold solver or interval-certificate
+implementation. Its observations describe finite sampled matrices; the
+asymptotic rank-threshold result uses the analytic arguments and interval
+checks documented here.
 
 ## Interpreting the certificate
 

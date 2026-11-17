@@ -1,0 +1,85 @@
+{
+  "output_files": {
+    "summary.csv": {
+      "rows": 6,
+      "sha256": "8ee4a3b0bfe034c6e33d2569f3b64deaf9321288a38c11dc414dcbcbb7ceaeeb"
+    },
+    "trials.csv": {
+      "rows": 120,
+      "sha256": "f981e84b51cd3bcca0f71ace548c33bb9d2252097ab0b0b09bcda56fdc096fde"
+    }
+  },
+  "parameters": {
+    "D": 8,
+    "base_seed": 1729,
+    "blocks": [
+      50,
+      100
+    ],
+    "erasure_model": "bernoulli",
+    "k": 3,
+    "rate_source": "explicit --rates",
+    "rates": [
+      0.22,
+      0.25,
+      0.28
+    ],
+    "rates_hex": [
+      "0x1.c28f5c28f5c29p-3",
+      "0x1.0000000000000p-2",
+      "0x1.1eb851eb851ecp-2"
+    ],
+    "total_trials": 120,
+    "trials_per_point": 20
+  },
+  "purpose": "optional finite-size exact-rank diagnostics; not a threshold certificate",
+  "python": {
+    "full_version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "implementation": "CPython",
+    "version": "3.12.14"
+  },
+  "reference_certificate": {
+    "D": 8,
+    "e_core": {
+      "lower": "0.24843364290422845081783152409939343787685787219662",
+      "upper": "0.24843364290422845081783152409939343787685787418821"
+    },
+    "e_core_midpoint_float": 0.24843364290422845,
+    "k": 3,
+    "path": "reproducibility/results/certificate_k3_D8.json",
+    "schema": "fgum-core-interval-certificate-v1",
+    "sha256": "8594cbaf54526e685aa29d312134ec808a019de12476bf721f8287d7b684be40",
+    "status": "passed",
+    "use": "reference only; this experiment does not rerun interval verification"
+  },
+  "sampling": {
+    "blocks": "b=m/D; each failed first-layer block includes all D columns in the rank calculation",
+    "failures": "independent Bernoulli events with probability rate",
+    "matrix": "fresh independent Gallager matrix per trial; fixed first layer and independently uniform partitions in other layers",
+    "random_generator": "Python random.Random (Mersenne Twister); separate matrix and failure streams"
+  },
+  "schema": "fgum-exact-rank-experiments-v1",
+  "script": {
+    "path": "reproducibility/experiments/exact_rank_experiments.py",
+    "sha256": "f6fcb9d61832dc0f27fdf2f3f1bf39ca908178d3726e5d2f4935c49daafac22b"
+  },
+  "seeding": {
+    "grid_order": "sorted and deduplicated; neither grid order nor trial count enters a trial seed",
+    "record": "base_seed, trial_seed, matrix_seed, failure_seed in every trials.csv row",
+    "scheme": "fgum-exact-rank-trial-v1",
+    "streams": "SHA256 of analogous JSON with scheme=trial scheme+'-stream',trial_seed,stream ('matrix' or 'failures')",
+    "trial": "SHA256 of compact, ASCII, key-sorted JSON with scheme,base_seed,k,D,blocks,rate_hex,trial_index,erasure_model; big-endian digest integer",
+    "trial_index": "zero-based within each grid point"
+  },
+  "verification": {
+    "core_rows": "number of nonzero residual rows; zero rows discarded",
+    "empty_matrix": "zero columns has rank 0, nullity 0, and full column rank",
+    "every_trial_checks": [
+      "nullity == core_nullity",
+      "rank == peeled_columns + core_rank"
+    ],
+    "peeling": "iterative singleton-row deletion, including newly created singletons",
+    "rank": "exact binary Gaussian elimination using Python integer XOR",
+    "zero_columns": "retained by peeling and included in column nullity"
+  }
+}

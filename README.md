@@ -28,6 +28,7 @@ Requires a C++20 compiler and GNU Make. The table-generating Python scripts use 
 | [`bp_data/`](bp_data/) | DQI + BP | `python3 generate_bp_table.py` | [bp_data/README.md](bp_data/README.md) |
 | [`fgum_data/`](fgum_data/) | Regev + FGUM | `python3 generate_fgum_table.py` | [fgum_data/README.md](fgum_data/README.md) |
 | [`reproducibility/`](reproducibility/) | FGUM threshold certificate (Section 5 and Appendix A) | `python3 run_all.py` | [reproducibility/README.md](reproducibility/README.md) |
+| [`reproducibility/experiments/`](reproducibility/experiments/) | Optional finite-size FGUM rank diagnostics | See experiment instructions | [reproducibility/experiments/README.md](reproducibility/experiments/README.md) |
 | [`qaoa_data/`](qaoa_data/) | QAOA (p ≤ 16) | — (angle table only) | [qaoa_data/README.md](qaoa_data/README.md) |
 | [`qaoa_verifier/`](qaoa_verifier/) | QAOA verification (Julia) | `julia --project=. verify.jl` | [qaoa_verifier/README.md](qaoa_verifier/README.md) |
 | [`qaoa_verifier_cpp/`](qaoa_verifier_cpp/) | QAOA verification (C++) | `make verify` | [qaoa_verifier_cpp/README.md](qaoa_verifier_cpp/README.md) |
@@ -47,6 +48,8 @@ python3 reproducibility/run_all.py
 ```
 
 The driver runs each parameter pair in a separate process and writes fresh results to `reproducibility/generated/`. The committed [`reproducibility/results/`](reproducibility/results/) directory contains the frozen results, including interval bounds and the score table. See [`reproducibility/README.md`](reproducibility/README.md) for the calculation, provenance, and commands for individual pairs.
+
+Optional [finite-size rank experiments](reproducibility/experiments/README.md) sample Gallager matrices and FGUM block failures, then compute exact binary ranks and peeling outcomes. They use only the Python standard library. The default erasure model selects each block independently with the specified probability; an explicitly labeled fixed-count mode is also available. These experiments provide empirical recovery frequencies at finite matrix sizes. The asymptotic threshold theorem is supported by the paper's analytic arguments and the interval certificate above.
 
 ## Verifying the QAOA Results
 

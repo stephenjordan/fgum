@@ -22,6 +22,14 @@ def package_files():
     if not results.is_dir():
         raise ValueError("Missing frozen results directory")
     files.extend(path for path in results.rglob("*") if path.is_file())
+    experiments = HERE / "experiments"
+    if not experiments.is_dir():
+        raise ValueError("Missing optional experiments directory")
+    files.extend(path for path in experiments.iterdir() if path.is_file())
+    example = experiments / "example"
+    if not example.is_dir():
+        raise ValueError("Missing frozen experiment example")
+    files.extend(path for path in example.rglob("*") if path.is_file())
     return sorted(files, key=lambda path: path.relative_to(ROOT).as_posix())
 
 
